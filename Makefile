@@ -1,4 +1,5 @@
 CC = /Users/gabibs/.armv7-unknown-linux-gnueabihf/bin/armv7-unknown-linux-gnueabihf-gcc
+# CC = gcc
 LDFLAGS =
 BLDDIR = .
 INCDIR = $(BLDDIR)/inc

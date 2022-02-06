@@ -28,12 +28,12 @@ int initialize_uart(){
   return uart0_filestream;
 }
 
-void write_in_uart(int uart_filestream) {
+void write_in_uart(int uart_filestream, int option) {
   unsigned char tx_buffer[20];
   unsigned char *p_tx_buffer;
 
   p_tx_buffer = &tx_buffer[0];
-  *p_tx_buffer++ = 163;
+  *p_tx_buffer++ = option;
   *p_tx_buffer++ = 1;
   *p_tx_buffer++ = 6;
   *p_tx_buffer++ = 1;

@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "uart.h"
+#include "menu.h"
 
 int main(){
+  clear();
+
+  int opt = show_menu();
 
   int uart_filestream = initialize_uart();
 
-  write_in_uart(uart_filestream);
+  write_in_uart(uart_filestream, opt);
 
   sleep(1);
 

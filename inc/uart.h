@@ -2,7 +2,7 @@
 #define UART_H
 
 int initialize_uart();
-void write_in_uart(int uart_filestream);
+void write_in_uart(int uart_filestream, int option);
 void read_from_uart(int uart_filestream);
 void close_uart(int uart_filestream);
 
