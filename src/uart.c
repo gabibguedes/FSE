@@ -6,14 +6,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <string.h>
-
-#define A1 161 // Solicitação de dado inteiro : integer
-#define A2 162 // Solicitação de dado real: float
-#define A3 163 // Solicitação de dado do tipo string: char[]
-
-#define B1 177 // Envio de um dado no formato integer
-#define B2 178 // Envio de um dado no formato float
-#define B3 179 // Envio de uma string: char[]
+#include <stdlib.h>
 
 int initialize_uart(){
   int uart0_filestream = -1;
@@ -89,20 +82,54 @@ void write_in_uart(int uart_filestream, int option) {
 }
 
 void read_from_uart(int uart_filestream, int option){
+  UartResponse res;
   sleep(1);
 
-  if (uart_filestream != -1) {
-    unsigned char rx_buffer[256];
-    int rx_length = read(uart_filestream, (void *)rx_buffer, 255);
-    if (rx_length < 0) {
-      printf("Erro na leitura.\n");
-    } else if (rx_length == 0) {
-      printf("Nenhum dado disponível.\n");
-    } else {
-      rx_buffer[rx_length] = '\0';
-      printf("%i Bytes lidos : %s\n", rx_length, rx_buffer);
+  res = read_buffer(uart_filestream);
+
+  if (uart_filestream != -1 && !res.empty) {
+    switch (option) {
+    case A1:
+      read_int(res);
+      break;
+    case A2:
+      read_float(res);
+      break;
+
+    default:
+      printf("%i Bytes lidos : %s\n", res.size, res.buffer);
+      break;
     }
   }
+}
+
+UartResponse read_buffer(int uart_filestream){
+  UartResponse rx;
+  rx.empty = 1;
+  rx.size = read(uart_filestream, (void *)rx.buffer, 255);
+  if (rx.size < 0){
+    printf("Erro na leitura.\n");
+  } else if (rx.size == 0){
+    printf("Nenhum dado disponível.\n");
+  } else {
+    rx.empty = 0;
+    rx.buffer[rx.size] = '\0';
+  }
+  return rx;
+}
+
+void read_int(UartResponse res){
+  int number;
+  memcpy(&number, &res.buffer[res.size - 4], 4);
+
+  printf("Número recebido: %d\n", number);
+}
+
+void read_float(UartResponse res){
+  float number;
+  memcpy(&number, &res.buffer[res.size - 4], 4);
+
+  printf("Número recebido: %f\n", number);
 }
 
 void close_uart(int uart_filestream){
