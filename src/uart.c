@@ -35,32 +35,36 @@ void write_in_uart(int uart_filestream, int option) {
   unsigned char tx_buffer[20];
   unsigned char *p_tx_buffer;
 
-  int int_send, str_size;
-  float float_send;
-  char * str_send;
+  int message_size;
+  char *message;
 
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = option;
 
   switch (option){
-  case B1:
-    int_send = send_int();
-    *p_tx_buffer++ = int_send;
+  case SEND_INT:
+    message = send_int();
+    message_size = 4;
     break;
-  case B2:
-    float_send = send_float();
-    *p_tx_buffer++ = float_send;
+
+  case SEND_FLOAT:
+    message = send_float();
+    message_size = 4;
     break;
-  case B3:
-    str_send = send_string();
-    str_size = strlen(str_send);
-    *p_tx_buffer++ = str_size;
-    for(int i = 0; i < str_size; i++)
-      *p_tx_buffer++ = str_send[i];
+
+  case SEND_STR:
+    message = send_string();
+    message_size = strlen(message);
+    *p_tx_buffer++ = message_size;
     break;
 
   default:
     break;
+  }
+
+  if(option >= SEND_INT){
+    for (int i = 0; i < message_size; i++)
+      *p_tx_buffer++ = message[i];
   }
 
   *p_tx_buffer++ = 1;
@@ -89,10 +93,10 @@ void read_from_uart(int uart_filestream, int option){
 
   if (uart_filestream != -1 && !res.empty) {
     switch (option) {
-    case A1:
+    case REQUEST_INT: case SEND_INT:
       read_int(res);
       break;
-    case A2:
+    case REQUEST_FLOAT: case SEND_FLOAT:
       read_float(res);
       break;
 

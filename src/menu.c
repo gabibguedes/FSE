@@ -1,6 +1,8 @@
 #include "menu.h"
+#include "uart.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void clear(){
   printf("\e[1;1H\e[2J");
@@ -47,7 +49,7 @@ int show_send_data_options(){
   scanf("%d", &choice);
 
   if(choice > 0 && choice < 4)
-    return 160 + choice;
+    return (REQUEST_INT - 1) + choice;
 
   if (choice == 4){
     clear();
@@ -64,7 +66,7 @@ int show_receive_data_options(){
   scanf("%d", &choice);
 
   if (choice > 0 && choice < 4)
-    return 176 + choice;
+    return (SEND_INT - 1) + choice;
 
   if (choice == 4){
     clear();
@@ -75,27 +77,37 @@ int show_receive_data_options(){
   return show_receive_data_options();
 }
 
-int send_int(){
+char *send_int(){
   int num;
+  char *bytes;
+
+  bytes = malloc(sizeof(char) * 4);
 
   printf("Inteiro: ");
   scanf("%d", &num);
 
-  return num;
+  memcpy(bytes, &num, 4);
+
+  return bytes;
 }
 
-float send_float(){
+char *send_float(){
   float num;
+  char *bytes;
+
+  bytes = malloc(sizeof(char) * 4);
 
   printf("Float: ");
   scanf("%f", &num);
 
-  return num;
+  memcpy(bytes, &num, 4);
+
+  return bytes;
 }
 
 char *send_string(){
   char *str;
-  str = malloc(255);
+  str = malloc(sizeof(char) * 100);
 
   printf("String: ");
   scanf("%s", str);

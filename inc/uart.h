@@ -1,13 +1,13 @@
 #ifndef UART_H
 #define UART_H
 
-#define A1 161 // Solicitação de dado inteiro
-#define A2 162 // Solicitação de dado real (float)
-#define A3 163 // Solicitação de dado do tipo string
+#define REQUEST_INT 0xA1 // Solicitação de dado inteiro
+#define REQUEST_FLOAT 0xA2 // Solicitação de dado real (float)
+#define REQUEST_STR 0xA3   // Solicitação de dado do tipo string
 
-#define B1 177 // Envio de um dado no formato integer
-#define B2 178 // Envio de um dado no formato float
-#define B3 179 // Envio de uma string
+#define SEND_INT 0xB1 // Envio de um dado no formato integer
+#define SEND_FLOAT 0xB2 // Envio de um dado no formato float
+#define SEND_STR 0xB3   // Envio de uma string
 
 typedef struct UartResponse {
   unsigned char buffer[256];
