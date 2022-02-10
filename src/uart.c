@@ -8,30 +8,28 @@
 #include <string.h>
 #include <stdlib.h>
 
-int initialize_uart(){
-  int uart0_filestream = -1;
+static int uart_filestream = -1;
 
-  uart0_filestream = open("/dev/serial0", O_RDWR | O_NOCTTY | O_NDELAY);
+void initialize_uart(){
+  uart_filestream = open("/dev/serial0", O_RDWR | O_NOCTTY | O_NDELAY);
 
-  if (uart0_filestream == -1) {
+  if (uart_filestream == -1) {
     printf("Erro - Não foi possível iniciar a UART.\n");
   } else {
     printf("UART inicializada!\n");
   }
 
   struct termios options;
-  tcgetattr(uart0_filestream, &options);
+  tcgetattr(uart_filestream, &options);
   options.c_cflag = B9600 | CS8 | CLOCAL | CREAD;
   options.c_iflag = IGNPAR;
   options.c_oflag = 0;
   options.c_lflag = 0;
-  tcflush(uart0_filestream, TCIFLUSH);
-  tcsetattr(uart0_filestream, TCSANOW, &options);
-
-  return uart0_filestream;
+  tcflush(uart_filestream, TCIFLUSH);
+  tcsetattr(uart_filestream, TCSANOW, &options);
 }
 
-void write_in_uart(int uart_filestream, int option) {
+void write_in_uart(int option) {
   unsigned char tx_buffer[20];
   unsigned char *p_tx_buffer;
 
@@ -85,7 +83,7 @@ void write_in_uart(int uart_filestream, int option) {
   }
 }
 
-void read_from_uart(int uart_filestream, int option){
+void read_from_uart(int option){
   UartResponse res;
   sleep(1);
 
@@ -107,7 +105,7 @@ void read_from_uart(int uart_filestream, int option){
   }
 }
 
-UartResponse read_buffer(int uart_filestream){
+UartResponse read_buffer(){
   UartResponse rx;
   rx.empty = 1;
   rx.size = read(uart_filestream, (void *)rx.buffer, 255);

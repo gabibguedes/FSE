@@ -15,12 +15,12 @@ typedef struct UartResponse {
   int empty;
 }UartResponse;
 
-int initialize_uart();
-void write_in_uart(int uart_filestream, int option);
-void read_from_uart(int uart_filestream, int option);
-UartResponse read_buffer(int uart_filestream);
+void initialize_uart();
+void write_in_uart(int option);
+void read_from_uart(int option);
+UartResponse read_buffer();
 void read_int(UartResponse response);
 void read_float(UartResponse response);
-void close_uart(int uart_filestream);
+void close_uart();
 
 #endif
