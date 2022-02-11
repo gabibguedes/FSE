@@ -34,7 +34,11 @@ void write_message(int option) {
   unsigned char *message, *buffer;
 
   message = get_message(option);
-  message_size = strlen((char *)message);
+
+  if(option >= SEND_INT && option != SEND_STR)
+    message_size = 4;
+  else
+    message_size = strlen((char *)message);
 
   buffer = malloc(message_size + BUFF_MIN_SIZE);
 
@@ -52,13 +56,10 @@ void write_message(int option) {
 }
 
 void receive_message() {
-  int option, size;
-  unsigned char *message = NULL;
+  unsigned char option, *message = NULL;
 
   message = receive_modbus_message();
-  size = strlen((char*) message);
-
-  memcpy(&option, &message[0], 1);
+  option = message[0];
 
   switch (option){
   case REQUEST_INT: case SEND_INT:
@@ -67,9 +68,12 @@ void receive_message() {
   case REQUEST_FLOAT: case SEND_FLOAT:
     read_float(&message[1]);
     break;
+  case REQUEST_STR: case SEND_STR:
+    printf("%i Bytes lidos : %s\n", message[1], &message[2]);
+    break;
 
   default:
-    printf("%i Bytes lidos : %s\n", size, &message[2]);
+    printf("[ERRO] Opção %d é inválida!\n", option);
     break;
   }
 }

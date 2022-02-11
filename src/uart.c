@@ -14,7 +14,7 @@ void initialize_uart(){
   uart_filestream = open("/dev/serial0", O_RDWR | O_NOCTTY | O_NDELAY);
 
   if (uart_filestream == -1) {
-    printf("Erro - Não foi possível iniciar a UART.\n");
+    printf("[ERRO] Não foi possível iniciar a UART.\n");
   } else {
     printf("UART inicializada!\n");
   }
@@ -31,12 +31,12 @@ void initialize_uart(){
 
 void write_in_uart(unsigned char *tx_buffer, int size) {
   if (uart_filestream != -1) {
-    debug_in_hex("Escrevendo caracteres na UART", tx_buffer, size);
+    debug_in_hex("Escrevendo caracteres na UART", tx_buffer);
     int count = write(uart_filestream, tx_buffer, size);
     if (count < 0) {
-      printf("UART TX error\n");
+      printf("[ERRO] UART TX error\n");
     } else {
-      printf("escrito.\n");
+      printf("Escrito.\n");
     }
   }
 }
@@ -51,11 +51,11 @@ unsigned char *read_uart(){
 
   if (uart_filestream != -1) {
     if (size < 0){
-      printf("Erro na leitura.\n");
+      printf("[ERRO] %d Erro na leitura.\n", size);
     } else if (size == 0){
-      printf("Nenhum dado disponível.\n");
+      printf("[ERRO] Nenhum dado disponível.\n");
     } else {
-      debug_in_hex("Recebido na UART", rx_buffer, size);
+      debug_in_hex("Recebido na UART", rx_buffer);
       rx_buffer[size] = '\0';
     }
   }
