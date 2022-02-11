@@ -114,11 +114,12 @@ unsigned char *send_string(){
   return str;
 }
 
-void debug_in_hexa(unsigned char *buffer, int size){
+void debug_in_hex(char* message, unsigned char *buffer, int size){
+  printf("\n[DEBUG] %s\n", message);
   printf("[DEBUG] ");
 
   for (int i = 0; i < size; i++){
     printf("%x ", buffer[i]);
   }
-  printf("\n");
+  printf("\n\n");
 }

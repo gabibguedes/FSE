@@ -11,7 +11,7 @@ int main(){
   clear();
   initialize_uart();
   write_message(opt);
-  read_from_uart(opt);
+  receive_message();
   close_uart();
 
   return 0;

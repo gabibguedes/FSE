@@ -9,8 +9,10 @@
 
 #define SEND_STR_CODE 0xB3
 
-#define MIN_MODBUS_SIZE 5
+#define MIN_MODBUS_SIZE 4
 
-void send_modbus_message(unsigned char *message, int size, int option);
+void send_modbus_message(unsigned char *message, int size);
+unsigned char *receive_modbus_message();
+int modbus_error(unsigned char *buffer);
 
 #endif

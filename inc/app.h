@@ -8,6 +8,12 @@
 #define SEND_FLOAT 0xB2
 #define SEND_STR 0xB3
 
+#define BUFF_MIN_SIZE 2
+
+unsigned char *get_message(int option);
 void write_message(int option);
+void receive_message();
+void read_int(unsigned char *res);
+void read_float(unsigned char *res);
 
 #endif

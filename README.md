@@ -1,6 +1,6 @@
-# Exercicio 1 - FSE
+# Exercicio 2 - FSE
 
-Implementação do [exercicio 1 de FSE](https://gitlab.com/fse_fga/exercicios/exercicio-1-uart). O exercício é a implementação da comunicação de uma Raspberry Pi com um Arduino, utilizando da UART e do protocolo de comunicação estabelecido em aula para o envio e recebimento de inteiros, floats e strings.
+Implementação do [exercicio 2 de FSE](https://gitlab.com/fse_fga/exercicios/exercicio-2-uart-modbus/). O exercício é a implementação da comunicação de uma Raspberry Pi com um Arduino, utilizando da UART e do protocolo de comunicação MODBUS para o envio e recebimento de inteiros, floats e strings.
 
 ## Como rodar
 

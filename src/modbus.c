@@ -6,46 +6,64 @@
 #include <stdlib.h>
 #include <string.h>
 
-void send_modbus_message (unsigned char *message, int message_size, int option) {
-  int buffer_size = MIN_MODBUS_SIZE;
-  int pos = 0; // Position to write on buffer
+void send_modbus_message (unsigned char *message, int message_size) {
+  int pos = 0;
+  short crc;
   unsigned char *message_buffer;
 
-  buffer_size += message_size;
-  message_buffer = (unsigned char*) malloc(buffer_size);
+  message_buffer = malloc(MIN_MODBUS_SIZE + message_size);
 
   message_buffer[pos++] = TO_DEVICE_CODE;
 
-  if (message_size > 0)  // Message to send value
-   message_buffer[pos++] = SEND_CODE_MODBUS;
-
-  else  // Message to request value
-   message_buffer[pos++] = REQUEST_CODE_MODBUS;
-
-
-  message_buffer[pos++] = option;
-
-  if (option == SEND_STR_CODE) // Add string size to message
-    message_buffer[pos++] = message_size;
+  if (message_size > 1)
+    message_buffer[pos++] = SEND_CODE_MODBUS;
+  else
+    message_buffer[pos++] = REQUEST_CODE_MODBUS;
 
   for (int i = 0; i < message_size; i++)
     message_buffer[pos++] = message[i];
 
-  // message_buffer[pos++] = 1;
-  // message_buffer[pos++] = 6;
-  // message_buffer[pos++] = 1;
-  // message_buffer[pos++] = 2;
-
-  short crc = calcula_CRC(message_buffer, pos);
+  crc = calcula_CRC(message_buffer, pos);
   memcpy(&message_buffer[pos], &crc, CRC_SIZE);
   pos += CRC_SIZE;
 
-  printf("Buffers de memória criados!\n");
+  write_in_uart(message_buffer, pos);
+}
 
-  debug_in_hexa(message_buffer, buffer_size);
+int modbus_error(unsigned char *buffer){
+  int error = 0;
+  if (buffer[0] != THIS_DEVICE_CODE) {
+    printf("[ERRO] Device errado! %x\n", buffer[0]);
+    error++;
+  }
 
-  write_in_uart(message_buffer, buffer_size);
+  if (buffer[1] != SEND_CODE_MODBUS && buffer[1] != REQUEST_CODE_MODBUS) {
+    printf("[ERRO] Código MODBUS errado! %x\n", buffer[1]);
+    error++;
+  }
 
-  free(message_buffer);
+  return error;
+}
+
+unsigned char *receive_modbus_message() {
+  int buffer_size;
+  unsigned char *buffer, *message;
+  // short crc;
+
+  buffer = read_uart();
+  buffer_size = strlen((char *)&buffer[1]) + 1;
+
+  message = malloc(buffer_size);
+
+  if (modbus_error(buffer))
+    return NULL;
+
+  // TODO: verify CRC
+  // crc = calcula_CRC(buffer, size - CRC_SIZE);
+  // memcpy(crc_buffer, &crc, CRC_SIZE);
+
+  memcpy(message, &buffer[2], buffer_size);
+
+  return message;
 }
 

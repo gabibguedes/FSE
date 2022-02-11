@@ -31,7 +31,7 @@ void initialize_uart(){
 
 void write_in_uart(unsigned char *tx_buffer, int size) {
   if (uart_filestream != -1) {
-    printf("Escrevendo caracteres na UART ...");
+    debug_in_hex("Escrevendo caracteres na UART", tx_buffer, size);
     int count = write(uart_filestream, tx_buffer, size);
     if (count < 0) {
       printf("UART TX error\n");
@@ -41,55 +41,25 @@ void write_in_uart(unsigned char *tx_buffer, int size) {
   }
 }
 
-void read_from_uart(int option){
-  UartResponse res;
+unsigned char *read_uart(){
+  unsigned char *rx_buffer;
+
+  rx_buffer = (unsigned char *) malloc(256);
+
   sleep(1);
+  int size = read(uart_filestream, (void *) rx_buffer, 255);
 
-  res = read_buffer(uart_filestream);
-
-  if (uart_filestream != -1 && !res.empty) {
-    switch (option) {
-    case REQUEST_INT: case SEND_INT:
-      read_int(res);
-      break;
-    case REQUEST_FLOAT: case SEND_FLOAT:
-      read_float(res);
-      break;
-
-    default:
-      printf("%i Bytes lidos : %s\n", res.size, res.buffer);
-      break;
+  if (uart_filestream != -1) {
+    if (size < 0){
+      printf("Erro na leitura.\n");
+    } else if (size == 0){
+      printf("Nenhum dado disponível.\n");
+    } else {
+      debug_in_hex("Recebido na UART", rx_buffer, size);
+      rx_buffer[size] = '\0';
     }
   }
-}
-
-UartResponse read_buffer(){
-  UartResponse rx;
-  rx.empty = 1;
-  rx.size = read(uart_filestream, (void *)rx.buffer, 255);
-  if (rx.size < 0){
-    printf("Erro na leitura.\n");
-  } else if (rx.size == 0){
-    printf("Nenhum dado disponível.\n");
-  } else {
-    rx.empty = 0;
-    rx.buffer[rx.size] = '\0';
-  }
-  return rx;
-}
-
-void read_int(UartResponse res){
-  int number;
-  memcpy(&number, &res.buffer[res.size - 4], 4);
-
-  printf("Número recebido: %d\n", number);
-}
-
-void read_float(UartResponse res){
-  float number;
-  memcpy(&number, &res.buffer[res.size - 4], 4);
-
-  printf("Número recebido: %f\n", number);
+  return rx_buffer;
 }
 
 void close_uart(int uart_filestream){
