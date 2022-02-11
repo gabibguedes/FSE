@@ -1,5 +1,6 @@
-#include "menu.h"
+#include "ui.h"
 #include "uart.h"
+#include "app.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,11 +78,10 @@ int show_receive_data_options(){
   return show_receive_data_options();
 }
 
-char *send_int(){
+unsigned char *send_int(){
   int num;
-  char *bytes;
-
-  bytes = malloc(sizeof(char) * 4);
+  unsigned char *bytes;
+  bytes = malloc(4);
 
   printf("Inteiro: ");
   scanf("%d", &num);
@@ -91,11 +91,10 @@ char *send_int(){
   return bytes;
 }
 
-char *send_float(){
+unsigned char *send_float(){
   float num;
-  char *bytes;
-
-  bytes = malloc(sizeof(char) * 4);
+  unsigned char *bytes;
+  bytes = malloc(4);
 
   printf("Float: ");
   scanf("%f", &num);
@@ -105,12 +104,21 @@ char *send_float(){
   return bytes;
 }
 
-char *send_string(){
-  char *str;
-  str = malloc(sizeof(char) * 100);
+unsigned char *send_string(){
+  unsigned char *str;
+  str = malloc(100);
 
   printf("String: ");
   scanf("%s", str);
 
   return str;
+}
+
+void debug_in_hexa(unsigned char *buffer, int size){
+  printf("[DEBUG] ");
+
+  for (int i = 0; i < size; i++){
+    printf("%x ", buffer[i]);
+  }
+  printf("\n");
 }

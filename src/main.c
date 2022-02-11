@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "uart.h"
-#include "menu.h"
+#include "ui.h"
+#include "app.h"
 
 int main(){
   clear();
@@ -9,7 +10,7 @@ int main(){
 
   clear();
   initialize_uart();
-  write_in_uart(opt);
+  write_message(opt);
   read_from_uart(opt);
   close_uart();
 

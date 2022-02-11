@@ -1,6 +1,6 @@
 #include "uart.h"
-#include "menu.h"
-
+#include "ui.h"
+#include "app.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -29,52 +29,10 @@ void initialize_uart(){
   tcsetattr(uart_filestream, TCSANOW, &options);
 }
 
-void write_in_uart(int option) {
-  unsigned char tx_buffer[20];
-  unsigned char *p_tx_buffer;
-
-  int message_size;
-  char *message;
-
-  p_tx_buffer = &tx_buffer[0];
-  *p_tx_buffer++ = option;
-
-  switch (option){
-  case SEND_INT:
-    message = send_int();
-    message_size = 4;
-    break;
-
-  case SEND_FLOAT:
-    message = send_float();
-    message_size = 4;
-    break;
-
-  case SEND_STR:
-    message = send_string();
-    message_size = strlen(message);
-    *p_tx_buffer++ = message_size;
-    break;
-
-  default:
-    break;
-  }
-
-  if(option >= SEND_INT){
-    for (int i = 0; i < message_size; i++)
-      *p_tx_buffer++ = message[i];
-  }
-
-  *p_tx_buffer++ = 1;
-  *p_tx_buffer++ = 6;
-  *p_tx_buffer++ = 1;
-  *p_tx_buffer++ = 2;
-
-  printf("Buffers de memória criados!\n");
-
+void write_in_uart(unsigned char *tx_buffer, int size) {
   if (uart_filestream != -1) {
     printf("Escrevendo caracteres na UART ...");
-    int count = write(uart_filestream, &tx_buffer[0], (p_tx_buffer - &tx_buffer[0]));
+    int count = write(uart_filestream, tx_buffer, size);
     if (count < 0) {
       printf("UART TX error\n");
     } else {
