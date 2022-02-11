@@ -114,6 +114,24 @@ unsigned char *send_string(){
   return str;
 }
 
+void read_int(unsigned char *res){
+  int number;
+  memcpy(&number, res, 4);
+
+  printf("Número recebido: %d\n", number);
+}
+
+void read_float(unsigned char *res){
+  float number;
+  memcpy(&number, res, 4);
+
+  printf("Número recebido: %f\n", number);
+}
+
+void read_str(unsigned char *res){
+  printf("%i Bytes lidos : %s\n", res[0], &res[1]);
+}
+
 void debug_in_hex(char* message, unsigned char *buffer, int size){
   printf("\n[DEBUG] %s\n", message);
   printf("[DEBUG] ");

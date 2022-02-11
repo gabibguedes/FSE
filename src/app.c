@@ -71,25 +71,11 @@ void receive_message() {
     read_float(&message[1]);
     break;
   case REQUEST_STR: case SEND_STR:
-    printf("%i Bytes lidos : %s\n", message[1], &message[2]);
+    read_str(&message[1]);
     break;
 
   default:
     printf("[ERRO] Opção inválida! %d\n", option);
     break;
   }
-}
-
-void read_int(unsigned char *res){
-  int number;
-  memcpy(&number, res, 4);
-
-  printf("Número recebido: %d\n", number);
-}
-
-void read_float(unsigned char *res){
-  float number;
-  memcpy(&number, res, 4);
-
-  printf("Número recebido: %f\n", number);
 }

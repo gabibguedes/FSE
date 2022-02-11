@@ -36,7 +36,7 @@ void write_in_uart(unsigned char *tx_buffer, int size) {
     if (count < 0) {
       printf("[ERRO] UART TX error\n");
     } else {
-      printf("Escrito.\n");
+      printf("Mensagem enviada.\n");
     }
   }
 }
