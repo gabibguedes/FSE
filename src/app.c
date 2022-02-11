@@ -59,6 +59,8 @@ void receive_message() {
   unsigned char option, *message = NULL;
 
   message = receive_modbus_message();
+  if(message == NULL) return;
+
   option = message[0];
 
   switch (option){
@@ -73,7 +75,7 @@ void receive_message() {
     break;
 
   default:
-    printf("[ERRO] Opção %d é inválida!\n", option);
+    printf("[ERRO] Opção inválida! %d\n", option);
     break;
   }
 }

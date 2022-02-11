@@ -5,6 +5,11 @@
  *      Author: Renato Coral Sampaio
  */
 
+#include "crc.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 short CRC16(short crc, char data) {
   const short tbl[256] = {
       0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
@@ -50,4 +55,24 @@ short calcula_CRC(unsigned char *commands, int size) {
   }
 
   return crc;
+}
+
+int crc_error(unsigned char *buffer, int size){
+  unsigned char *crc_generated, *crc_received;
+  short crc;
+  crc_generated = malloc(CRC_SIZE);
+  crc_received = malloc(CRC_SIZE);
+
+  crc = calcula_CRC(buffer, size - CRC_SIZE);
+  memcpy(crc_generated, &crc, CRC_SIZE);
+  memcpy(crc_received, &buffer[size - CRC_SIZE], CRC_SIZE);
+
+  if (crc_generated[0] != crc_received[0] || crc_generated[1] != crc_received[1]){
+    printf("[ERRO] CRC inválido!\n");
+    printf("[ERRO] CRC recebido: %x %x\n", crc_received[0], crc_received[1]);
+    printf("[ERRO] CRC gerado: %x %x\n\n", crc_generated[0], crc_generated[1]);
+    return 1; // ERRO
+  }
+
+  return 0;
 }

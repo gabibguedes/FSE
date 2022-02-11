@@ -12,5 +12,6 @@
 
 short CRC16(short crc, char data);
 short calcula_CRC(unsigned char *commands, int size);
+int crc_error(unsigned char *buffer, int size);
 
 #endif /* CRC16_H_ */
