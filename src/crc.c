@@ -71,7 +71,8 @@ int crc_error(unsigned char *buffer, int size){
     printf("[ERRO] CRC inválido!\n");
     printf("[ERRO] CRC recebido: %x %x\n", crc_received[0], crc_received[1]);
     printf("[ERRO] CRC gerado: %x %x\n\n", crc_generated[0], crc_generated[1]);
-    return 1; // ERRO
+
+    return 1;
   }
 
   return 0;

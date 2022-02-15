@@ -55,13 +55,22 @@ void write_message(int option) {
   free(buffer);
 }
 
-void receive_message() {
-  unsigned char option, *message = NULL;
+int option_error(int opt_expected, int opt_received) {
+  if (opt_expected == opt_received)
+    return 0;
 
-  message = receive_modbus_message();
+  show_error("Opção", opt_expected, opt_received);
+  return 1;
+}
+
+void receive_message(int option) {
+  unsigned char *message = NULL;
+
+  message = receive_modbus_message(option);
   if(message == NULL) return;
 
-  option = message[0];
+  if(option_error(option, message[0]))
+    return;
 
   switch (option){
   case REQUEST_INT: case SEND_INT:
@@ -75,7 +84,6 @@ void receive_message() {
     break;
 
   default:
-    printf("[ERRO] Opção inválida! %d\n", option);
     break;
   }
 }

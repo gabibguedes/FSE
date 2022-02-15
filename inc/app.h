@@ -12,6 +12,7 @@
 
 unsigned char *get_message(int option);
 void write_message(int option);
-void receive_message();
+void receive_message(int option);
+int option_error(int opt_expected, int opt_received);
 
 #endif

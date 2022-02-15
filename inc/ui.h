@@ -19,6 +19,7 @@ void read_float(unsigned char *res);
 void read_str(unsigned char *res);
 
 void debug_in_hex(char *message, unsigned char *buffer, int size);
+void show_error(char *label, unsigned char expected, unsigned char received);
 
 #endif
 

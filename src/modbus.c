@@ -31,31 +31,42 @@ void send_modbus_message (unsigned char *message, int message_size) {
   write_in_uart(message_buffer, pos);
 }
 
-int modbus_error(unsigned char *buffer){
+int modbus_error(unsigned char *buffer, int modbus_code){
+  int error = 0;
+
   if (buffer[0] != THIS_DEVICE_CODE) {
-    printf("[ERRO] Device errado! %x\n", buffer[0]);
-    return 1;
+    show_error("Device", THIS_DEVICE_CODE, buffer[0]);
+    error++;
   }
 
-  if (buffer[1] != SEND_CODE_MODBUS && buffer[1] != REQUEST_CODE_MODBUS) {
-    printf("[ERRO] Código MODBUS errado! %x\n", buffer[1]);
-    return 1;
+  if ( buffer[1] != modbus_code ) {
+    show_error("Código MODBUS", modbus_code, buffer[1]);
+    error++;
   }
 
-  return 0;
+  return error;
 }
 
-unsigned char *receive_modbus_message() {
+int get_modbus_code_from_option(int option){
+  int code = REQUEST_CODE_MODBUS;
+  if(option >= SEND_INT)
+    code = SEND_CODE_MODBUS;
+
+  return code;
+}
+
+unsigned char *receive_modbus_message(int option) {
   unsigned char *buffer, *message;
   int buffer_size = MIN_MODBUS_SIZE + MIN_DATA_SIZE;
+  int modbus_code = get_modbus_code_from_option(option);
 
   buffer = read_uart();
 
-  if (modbus_error(buffer))
+  if (modbus_error(buffer, modbus_code))
     return NULL;
 
   if (buffer[2] == SEND_STR || buffer[2] == REQUEST_STR )
-    buffer_size = MIN_MODBUS_SIZE + STR_ARG_SIZE + buffer[3];
+    buffer_size += buffer[3];
 
   if (crc_error(buffer, buffer_size))
     return NULL;

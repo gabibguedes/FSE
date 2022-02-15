@@ -43,7 +43,6 @@ void write_in_uart(unsigned char *tx_buffer, int size) {
 
 unsigned char *read_uart(){
   unsigned char *rx_buffer;
-
   rx_buffer = (unsigned char *) malloc(256);
 
   sleep(1);

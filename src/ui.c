@@ -141,3 +141,9 @@ void debug_in_hex(char* message, unsigned char *buffer, int size){
   }
   printf("\n\n");
 }
+
+void show_error(char *label, unsigned char expected, unsigned char received){
+  printf("[ERRO] %s errado!\n", label);
+  printf("[ERRO] Esperado: %x\n", expected);
+  printf("[ERRO] Recebido: %x\n\n", received);
+}

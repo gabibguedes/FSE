@@ -7,14 +7,12 @@
 #define THIS_DEVICE_CODE 0x0
 #define TO_DEVICE_CODE 0x01
 
-#define SEND_STR_CODE 0xB3
-
 #define MIN_MODBUS_SIZE 4
 #define MIN_DATA_SIZE 5
-#define STR_ARG_SIZE 5
 
 void send_modbus_message(unsigned char *message, int size);
-unsigned char *receive_modbus_message();
-int modbus_error(unsigned char *buffer);
+unsigned char *receive_modbus_message(int option);
+int modbus_error(unsigned char *buffer, int modbus_code);
+int get_modbus_code_from_option(int option);
 
 #endif
