@@ -28,13 +28,22 @@ python3 py/main.py
 
 O programa entrará no loop de execução atualizando os dados do display a cada segundo até que seja interrompido.
 
-<!-- ## Programa em C
+## Programa em C
+
+O programa lê as 3 grandezas fornecidas pelo sensor BME280 (Temperatura, Umidade e Pressão) e apresenta o resultado no display, atualizando os dados a cada 1 segundo. A cada 10 sengundos o programa armazena no arquivo `store_data.csv` a média dos dados coletados nesse periodo.
+
 ### Como rodar
 
-O programa utiliza de Makefile com cross-compiling, é necessário inicialmente ajustar o caminho do compilador utilizado na variável `CC` do Makefile. Com o compilador correto, para compilar o programa basta utilizar o comando abaixo:
+O programa utiliza de Makefile, é necessário inicialmente ajustar o caminho do compilador utilizado na variável `CC` do Makefile ou importar o projeto para ser compilado na Raspiberry. Com o compilador correto, para compilar o programa basta utilizar o comando abaixo:
 
 ```sh
 make
 ```
 
-A compilação gera o arquivo binário executável em `bin/bin`. Esse arquivo deve ser transferido para a Raspberry Pi para ser executado na placa. -->
+A compilação gera o arquivo binário executável em `bin/bin`. Esse arquivo deve ser transferido para a Raspberry Pi para ser executado na placa.
+
+Se o programa já estiver sendo compilado na placa, para executa-lo basta utilizar o comando abaixo:
+
+```sh
+make run
+```
