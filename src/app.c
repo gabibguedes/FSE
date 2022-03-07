@@ -26,13 +26,15 @@ Config initial_config(){
 void start_app(Config app_config){
   initialize_uart();
   initialize_gpio();
+  lcd_init();
 
-  // send_system_status(ON);
-  // send_control_mode(app_config.mode);
+  send_system_status(ON);
+  send_control_mode(app_config.mode);
 }
 
 void shut_down(){
-  // turn_off_system();
+  turn_off_system();
+  ClrLcd();
   //close_csv_file();
 }
 
@@ -43,16 +45,14 @@ void turn_off_system(){
 }
 
 void app_main_loop(Config app_config){
-  // printf("cade??\n");
-  float te = get_external_temperature();
-  printf("te: %.2f\n", te);
-  // float ti = request_internal_temperature();
-  // printf("te: %.2f\n", ti);
-  // float tr = get_reference_temperature(app_config);
-  // printf("te: %.2f\n", tr);
-  // print_sensors_data_on_display(app_config.mode, ti, te, tr);
-  
-  // request_user_commands(app_config);
+  while(1){
+    float te = get_external_temperature();
+    float ti = request_internal_temperature();
+    float tr = get_reference_temperature(app_config);
+    print_sensors_data_on_display(app_config.mode, ti, te, tr);
+    
+    request_user_commands(app_config);
+  }
 
 }
 
@@ -74,7 +74,7 @@ float request_internal_temperature(){
   unsigned char *message = malloc(MESSAGE_REQUEST_SIZE + 1);
   unsigned char *response = malloc(RECEIVE_DATA_SIZE);
 
-  message[1] = REQUEST_TEMP;
+  message[0] = REQUEST_TEMP;
   send_modbus_message(message, MESSAGE_REQUEST_SIZE);
 
   response = receive_modbus_message(REQUEST_TEMP);
@@ -93,7 +93,7 @@ float request_potentiometer_temperature(){
   float tr;
   unsigned char *message = malloc(MESSAGE_REQUEST_SIZE + 1);
   unsigned char *response = malloc(RECEIVE_DATA_SIZE);
-  message[1] = REQUEST_TEMP_POT;
+  message[0] = REQUEST_TEMP_POT;
 
   send_modbus_message(message, MESSAGE_REQUEST_SIZE);
   response = receive_modbus_message(REQUEST_TEMP_POT);
@@ -111,13 +111,16 @@ void request_user_commands(Config app_config){
   unsigned char *message = malloc(MESSAGE_REQUEST_SIZE + 1);
   unsigned char *response = malloc(MESSAGE_RECEIVED_SIZE);
 
-  message[1] = READ_USER_CMD;
+  message[0] = READ_USER_CMD;
   send_modbus_message(message, MESSAGE_REQUEST_SIZE);
 
   response = receive_modbus_message(READ_USER_CMD);
-  printf("[OPÇÃO RECEBIDA] %x\n", response[0]);
+  printf("[OPÇÃO RECEBIDA] %x\n", response[1]);
 
-  switch(response[0]){
+  switch(response[1]){
+    case DO_NOTHING:
+      printf("nada\n");
+      break;
     case TURN_ON:
       printf("on\n");
       send_system_status(ON);
@@ -135,6 +138,8 @@ void request_user_commands(Config app_config){
       printf("reflow\n");
       app_config.mode = REFLOW_CURVE;
       send_control_mode(REFLOW_CURVE);
+      break;
+    default:
       break;
   }
   

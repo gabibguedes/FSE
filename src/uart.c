@@ -31,12 +31,11 @@ void initialize_uart(){
 
 void write_in_uart(unsigned char *tx_buffer, int size) {
   if (uart_filestream != -1) {
-    debug_in_hex("Escrevendo caracteres na UART", tx_buffer, size);
     int count = write(uart_filestream, tx_buffer, size);
     if (count < 0) {
       printf("[ERRO] UART TX error\n");
     } else {
-      printf("Mensagem enviada.\n");
+      // printf("Mensagem enviada.\n");
     }
   } else {
     printf("[ERRO] Uart não inicializada!\n");
@@ -56,7 +55,6 @@ unsigned char *read_uart(){
     } else if (size == 0){
       printf("[ERRO] Nenhum dado disponível.\n");
     } else {
-      debug_in_hex("Recebido na UART", rx_buffer, size);
       rx_buffer[size] = '\0';
     }
   } else {
