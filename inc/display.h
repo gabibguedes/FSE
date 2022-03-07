@@ -1,6 +1,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#import "app.h"
+
 // Define some device parameters
 #define I2C_ADDR 0x27 // I2C device address
 

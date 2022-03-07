@@ -15,14 +15,17 @@ void send_modbus_message (unsigned char *message, int message_size) {
   message_buffer = malloc(MIN_MODBUS_SIZE + message_size);
 
   message_buffer[pos++] = TO_DEVICE_CODE;
+  message_buffer[pos++] = get_modbus_code_from_option(message[0]);
+  message_buffer[pos++] = message[0];
 
-  if (message_size > 1)
-    message_buffer[pos++] = SEND_CODE_MODBUS;
-  else
-    message_buffer[pos++] = REQUEST_CODE_MODBUS;
+  message_buffer[pos++] = 1;
+  message_buffer[pos++] = 6;
+  message_buffer[pos++] = 1;
+  message_buffer[pos++] = 2;
 
   for (int i = 0; i < message_size; i++)
-    message_buffer[pos++] = message[i];
+    message_buffer[pos++] = message[i+1];
+
 
   crc = calcula_CRC(message_buffer, pos);
   memcpy(&message_buffer[pos], &crc, CRC_SIZE);
@@ -49,24 +52,30 @@ int modbus_error(unsigned char *buffer, int modbus_code){
 
 int get_modbus_code_from_option(int option){
   int code = REQUEST_CODE_MODBUS;
-  if(option >= SEND_INT)
+  if (option >= SEND_CTRL_SIG)
     code = SEND_CODE_MODBUS;
 
   return code;
 }
 
+int option_error(int opt_expected, int opt_received) {
+  if (opt_expected == opt_received)
+    return 0;
+
+  show_error("Opção", opt_expected, opt_received);
+  return 1;
+}
+
+
 unsigned char *receive_modbus_message(int option) {
   unsigned char *buffer, *message;
-  int buffer_size = MIN_MODBUS_SIZE + MIN_DATA_SIZE;
+  int buffer_size = RECEIVE_DATA_SIZE;
   int modbus_code = get_modbus_code_from_option(option);
 
   buffer = read_uart();
 
   if (modbus_error(buffer, modbus_code))
     return NULL;
-
-  if (buffer[2] == SEND_STR || buffer[2] == REQUEST_STR )
-    buffer_size += buffer[3];
 
   if (crc_error(buffer, buffer_size))
     return NULL;

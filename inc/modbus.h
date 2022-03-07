@@ -8,7 +8,8 @@
 #define TO_DEVICE_CODE 0x01
 
 #define MIN_MODBUS_SIZE 4
-#define MIN_DATA_SIZE 5
+#define RECEIVE_DATA_SIZE 9
+
 
 void send_modbus_message(unsigned char *message, int size);
 unsigned char *receive_modbus_message(int option);

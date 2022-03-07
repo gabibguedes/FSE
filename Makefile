@@ -1,6 +1,7 @@
-CC = /Users/gabibs/.armv7-unknown-linux-gnueabihf/bin/armv7-unknown-linux-gnueabihf-gcc
-# CC = gcc
-LDFLAGS = -lwiringPi -lpthread -lncurses
+# CC = /Users/gabibs/.armv7-unknown-linux-gnueabihf/bin/armv7-unknown-linux-gnueabihf-gcc
+CC = gcc
+# LDFLAGS = -lwiringPi -lpthread -lncurses
+LDFLAGS =
 BLDDIR = .
 INCDIR = $(BLDDIR)/inc
 SRCDIR = $(BLDDIR)/src

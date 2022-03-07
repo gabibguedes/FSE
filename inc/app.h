@@ -1,18 +1,56 @@
 #ifndef APP_H
 #define APP_H
 
-#define REQUEST_INT 0xA1
-#define REQUEST_FLOAT 0xA2
-#define REQUEST_STR 0xA3
-#define SEND_INT 0xB1
-#define SEND_FLOAT 0xB2
-#define SEND_STR 0xB3
+#define REQUEST_TEMP 0xC1
+#define REQUEST_TEMP_POT 0xC2
+#define READ_USER_CMD 0xC3
+
+#define SEND_CTRL_SIG 0xD1
+#define SEND_REF_SIG 0xD2
+#define SEND_SYSTEM_STATE 0xD3
+#define SEND_CTRL_MODE 0xD4
 
 #define BUFF_MIN_SIZE 2
 
-unsigned char *get_message(int option);
-void write_message(int option);
-void receive_message(int option);
+#define MESSAGE_REQUEST_SIZE 0
+#define MESSAGE_SYSTEM_STATE_SIZE 1
+#define MESSAGE_SEND_SIGNAL_SIZE 4
+
+typedef enum OnOffState
+{
+  ON = 1,
+  OFF = 0
+} OnOffState;
+
+typedef enum ControlMode
+{
+  POTENTIOMETER = 0,
+  REFLOW_CURVE = 1,
+  TERMINAL = 2
+} ControlMode;
+
+typedef struct Config
+{
+  float kp;
+  float ki;
+  float kd;
+  ControlMode mode;
+  float temp;
+} Config;
+
+Config initial_config();
+void app_main_loop(Config app_config);
+
+
 int option_error(int opt_expected, int opt_received);
+void start_app(Config app_config);
+
+void request_internal_temperature();
+void request_potentiometer_temperature();
+void request_user_commands();
+void send_control_signal(int control_signal);
+void send_reference_signal(int reference_signal);
+void send_system_status(OnOffState state);
+void send_control_mode(ControlMode state);
 
 #endif

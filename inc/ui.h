@@ -1,22 +1,16 @@
-#ifndef ui_H
-#define ui_H
+#ifndef UI_H
+#define UI_H
+
+
+#include "app.h"
 
 void clear();
 void invalid_option();
 
-int show_menu();
-void print_data_options(char *command);
-
-int show_send_data_options();
-int show_receive_data_options();
-
-unsigned char *send_int();
-unsigned char *send_float();
-unsigned char *send_string();
-
-void read_int(unsigned char *res);
-void read_float(unsigned char *res);
-void read_str(unsigned char *res);
+char* traslate_config_mode(ControlMode mode);
+int show_menu(Config program_config);
+int edit_pid_constants(Config program_config);
+int edit_execution_mode(Config program_config);
 
 void debug_in_hex(char *message, unsigned char *buffer, int size);
 void show_error(char *label, unsigned char expected, unsigned char received);

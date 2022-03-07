@@ -18,16 +18,39 @@
 #include <stdio.h>
 #include "display.h"
 
-void print_sensors_data_on_display(float temp, float pressure, float humidity){
+char* translate_control_mode_to_lcd(ControlMode mode){
+  switch (mode) {
+  case TERMINAL:
+    return "TERM"
+  case POTENTIOMETER:
+    return "POT"
+  case REFLOW_CURVE:
+    return "REFLOW"
+  default:
+    return ""
+  }
+}
+
+void print_sensors_data_on_display(ControlMode mode, float ti, float te, float tr){
   ClrLcd();
   lcdLoc(LINE1);
-  typeFloat(temp);
-  typeln("C ");
-  typeFloat(humidity);
-  typeln("%%");
+  typeln(translate_control_mode_to_lcd(mode));
+  typeln(" TI:");
+  typeFloat(ti);
   lcdLoc(LINE2);
-  typeFloat(pressure);
-  typeln("hPa");
+  typeln("TE:");
+  typeFloat(te);
+  typeln(" TR:");
+  typeFloat(tr);
+
+}
+
+void print_system_off(){
+  ClrLcd();
+  lcdLoc(LINE1);
+  typeln("Sistema");
+  lcdLoc(LINE2);
+  typeln("Desligado!");
 }
 
 // float to string

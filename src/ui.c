@@ -1,6 +1,5 @@
 #include "ui.h"
 #include "uart.h"
-#include "app.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,104 +14,124 @@ void invalid_option(){
   printf("\nOpção inválida! Tente novamente\n\n");
 }
 
-int show_menu(){
+char* traslate_config_mode(ControlMode mode){
+  switch (mode){
+  case TERMINAL:
+    return "Terminal";
+
+  case REFLOW_CURVE:
+    return "Curva Reflow";
+
+  case POTENTIOMETER:
+    return "Potenciometro";
+
+  default:
+    return "Modo não identificado";
+  }
+}
+
+int show_menu(Config program_config){
   int choice;
-  printf("Qual comando deseja executar?\n\n");
-  printf("1 - Solicitar dado\n");
-  printf("2 - Enviar dado\n\n");
+
+  printf("Configurações do programa:\n\n");
+
+  printf("Kp = %.2f\n", program_config.kp);
+  printf("Ki = %.2f\n", program_config.ki);
+  printf("Kd = %.2f\n", program_config.kd);
+  printf("Modo de Execução = %s\n", traslate_config_mode(program_config.mode));
+
+  if(program_config.mode == TERMINAL){
+    printf("Temperatura= %.2f\n", program_config.temp);
+  }
+  printf("\n");
+
+
+
+  printf("1 - Editar constantes do PID\n");
+  printf("2 - Editar modo de execução\n");
+  printf("3 - Iniciar programa\n");
+
+  if(program_config.mode == TERMINAL){
+    printf("4 - Editar temperatura inicial via terminal\n");
+  }
   scanf("%d", &choice);
 
   switch (choice){
   case 1:
     clear();
-    return show_send_data_options();
+    return edit_pid_constants(program_config);
   case 2:
     clear();
-    return show_receive_data_options();
+    return edit_execution_mode(program_config);
+  case 3:
+    printf("INICIAR PROGRAMA!\n");
+    break;
+  case 4:
+    clear();
+    edit_pid_constants(program_config);
+    break;
 
   default:
     invalid_option();
-    return show_menu();
+    return show_menu(program_config);
   }
+  return 1;
 }
 
-void print_data_options(char *command) {
-  printf("Que tipo de dado deseja %s?\n\n", command);
-  printf("1 - Inteiro\n");
-  printf("2 - Float\n");
-  printf("3 - String\n");
-  printf("\n4 - Voltar ao menu principal\n\n");
+int edit_pid_constants(Config program_config){
+  printf("Temperatura: ");
+  scanf("%f", &program_config.temp);
+
+  clear();
+  return show_menu(program_config);
+}
+int edit_pid_constants(Config program_config){
+  printf("Digite os novos valores das constantes PID:\n");
+  printf("Kp: ");
+  scanf("%f", &program_config.kp);
+
+  printf("Ki: ");
+  scanf("%f", &program_config.ki);
+
+  printf("Kd: ");
+  scanf("%f", &program_config.kd);
+
+  clear();
+  return show_menu(program_config);
 }
 
-int show_send_data_options(){
+int start_temperature_from_terminal(Config program_config){
+  printf("Temperatura: ");
+  scanf("%f", &program_config.temp);
+
+  clear();
+  return show_menu(program_config);
+}
+
+int edit_execution_mode(Config program_config){
   int choice;
-  print_data_options("solicitar");
+
+  printf("Escolha o modo de execução:\n");
+  printf("1 - Potenciometro\n");
+  printf("2 - Curva Reflow\n");
+  printf("3 - Terminal\n\n");
+
   scanf("%d", &choice);
 
-  if(choice > 0 && choice < 4)
-    return (REQUEST_INT - 1) + choice;
-
-  if (choice == 4){
-    clear();
-    return show_menu();
+  if(choice < 1 || choice > 3){
+    invalid_option();
+    edit_execution_mode(program_config);
   }
 
-  invalid_option();
-  return show_send_data_options();
+  program_config.mode = choice - 1;
+
+  clear();
+  return show_menu(program_config);
 }
 
-int show_receive_data_options(){
-  int choice;
-  print_data_options("enviar");
-  scanf("%d", &choice);
 
-  if (choice > 0 && choice < 4)
-    return (SEND_INT - 1) + choice;
 
-  if (choice == 4){
-    clear();
-    return show_menu();
-  }
 
-  invalid_option();
-  return show_receive_data_options();
-}
-
-unsigned char *send_int(){
-  int num;
-  unsigned char *bytes;
-  bytes = malloc(4);
-
-  printf("Inteiro: ");
-  scanf("%d", &num);
-
-  memcpy(bytes, &num, 4);
-
-  return bytes;
-}
-
-unsigned char *send_float(){
-  float num;
-  unsigned char *bytes;
-  bytes = malloc(4);
-
-  printf("Float: ");
-  scanf("%f", &num);
-
-  memcpy(bytes, &num, 4);
-
-  return bytes;
-}
-
-unsigned char *send_string(){
-  unsigned char *str;
-  str = malloc(100);
-
-  printf("String: ");
-  scanf("%s", str);
-
-  return str;
-}
 
 void read_int(unsigned char *res){
   int number;

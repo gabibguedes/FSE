@@ -38,6 +38,8 @@ void write_in_uart(unsigned char *tx_buffer, int size) {
     } else {
       printf("Mensagem enviada.\n");
     }
+  } else {
+    printf("[ERRO] Uart não inicializada!\n");
   }
 }
 
@@ -57,6 +59,8 @@ unsigned char *read_uart(){
       debug_in_hex("Recebido na UART", rx_buffer, size);
       rx_buffer[size] = '\0';
     }
+  } else {
+    printf("[ERRO] Uart não inicializada!\n");
   }
   return rx_buffer;
 }
