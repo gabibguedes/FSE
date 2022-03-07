@@ -1,30 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include "store_data.h"
 
-static FILE *file;
-
 void open_csv(){
-  file = fopen("store_data.csv", "w");
+  FILE *file = fopen("store_data.csv", "w");
   if (file == NULL){
     printf("Error!");
     exit(1);
   }
-  fprintf(file, "Temperature, Pressure, Humidity, Date\n");
+  fprintf(file, "Temperatura interna, Temperatura externa, Temperatura de referencia, Resistencia, Ventoinha, Data\n");
+  fclose(file);
 }
 
-void write_measures(float temp, float pressure, float humidity){
+void write_measures(float ti, float te, float tr, float pid){
+  FILE *file = fopen("store_data.csv", "a");
+  if (file == NULL){
+    printf("Error!");
+    exit(1);
+  }
   time_t rawtime;
   struct tm *timeinfo;
 
   time(&rawtime);
   timeinfo = localtime(&rawtime);
 
-  fprintf(file, "%.2f C, %.2f hPa, %.2f %%, %s", temp, pressure, humidity, asctime(timeinfo));
-}
+  float resistor = 0.0;
+  float fan = 0.0;
 
-void close_csv_file(){
+  if(pid > 0){
+    resistor = pid;
+  } else if(pid < 40) {
+    fan = pid;
+  }
+
+  fprintf(file, "%.2f, %.2f, %.2f, %.2f, %.2f, %s", ti, te, tr, resistor, fan, asctime(timeinfo));
   fclose(file);
 }
+

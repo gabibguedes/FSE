@@ -43,23 +43,25 @@ typedef struct Config
   float kd;
   ControlMode mode;
   float temp;
+  OnOffState state;
 } Config;
 
 Config initial_config();
-void app_main_loop(Config app_config);
+void app_main_loop(Config *app_config);
 
 
 int option_error(int opt_expected, int opt_received);
-void start_app(Config app_config);
-void turn_off_system();
-void shut_down();
+void start_app(Config *app_config);
+void turn_off_system(Config *app_config);
+void shut_down(Config *app_config);
 
 float request_internal_temperature();
 float request_potentiometer_temperature();
-void request_user_commands(Config app_config);
-void send_control_signal(int control_signal);
-void send_reference_signal(int reference_signal);
+void request_user_commands(Config *app_config);
+void send_control_signal(int pid);
+void send_reference_signal(float tr);
 void send_system_status(OnOffState state);
 void send_control_mode(ControlMode state);
-float get_reference_temperature(Config app_config);
+float get_reference_temperature(Config *app_config);
+
 #endif

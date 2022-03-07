@@ -3,10 +3,6 @@
 Implementação do [trabalho 1 de FSE](https://gitlab.com/fse_fga/trabalhos-2021_2/trabalho-1-2021-2).
 
 
-## Programa em C
-
-
-
 ### Como rodar
 
 O programa utiliza de Makefile, é necessário inicialmente ajustar o caminho do compilador utilizado na variável `CC` do Makefile ou importar o projeto para ser compilado na Raspiberry. Com o compilador correto, para compilar o programa basta utilizar o comando abaixo:

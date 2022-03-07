@@ -277,7 +277,7 @@ int8_t stream_sensor_data_forced_mode(struct bme280_dev *dev)
 
     if(count == 10){
       /* Logs the measures avrage */
-      write_measures(sum_temp / 10, sum_press / 10, sum_hum / 10);
+      // write_measures(sum_temp / 10, sum_press / 10, sum_hum / 10);
 
       count = 0;
       sum_temp = 0;

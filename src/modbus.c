@@ -44,6 +44,7 @@ int modbus_error(unsigned char *buffer, int modbus_code){
 
   if ( buffer[1] != modbus_code ) {
     show_error("Código MODBUS", modbus_code, buffer[1]);
+    debug_in_hex("Msg Recebida", buffer, RECEIVE_DATA_SIZE);
     error++;
   }
 

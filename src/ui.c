@@ -30,18 +30,18 @@ char* traslate_config_mode(ControlMode mode){
   }
 }
 
-int show_menu(Config program_config){
+int show_menu(Config *program_config){
   int choice;
 
   printf("Configurações do programa:\n\n");
 
-  printf("Kp = %.2f\n", program_config.kp);
-  printf("Ki = %.2f\n", program_config.ki);
-  printf("Kd = %.2f\n", program_config.kd);
-  printf("Modo de Execução = %s\n", traslate_config_mode(program_config.mode));
+  printf("Kp = %.2f\n", program_config->kp);
+  printf("Ki = %.2f\n", program_config->ki);
+  printf("Kd = %.2f\n", program_config->kd);
+  printf("Modo de Execução = %s\n", traslate_config_mode(program_config->mode));
 
-  if(program_config.mode == TERMINAL){
-    printf("Temperatura= %.2f\n", program_config.temp);
+  if(program_config->mode == TERMINAL){
+    printf("Temperatura= %.2f\n", program_config->temp);
   }
   printf("\n");
 
@@ -51,7 +51,7 @@ int show_menu(Config program_config){
   printf("2 - Editar modo de execução\n");
   printf("3 - Iniciar programa\n");
 
-  if(program_config.mode == TERMINAL){
+  if(program_config->mode == TERMINAL){
     printf("4 - Editar temperatura inicial via terminal\n");
   }
   scanf("%d", &choice);
@@ -78,38 +78,38 @@ int show_menu(Config program_config){
   return 1;
 }
 
-int edit_temperature(Config program_config){
+int edit_temperature(Config *program_config){
   printf("Temperatura: ");
-  scanf("%f", &program_config.temp);
+  scanf("%f", &program_config->temp);
 
   clear();
   return show_menu(program_config);
 }
 
-int edit_pid_constants(Config program_config){
+int edit_pid_constants(Config *program_config){
   printf("Digite os novos valores das constantes PID:\n");
   printf("Kp: ");
-  scanf("%f", &program_config.kp);
+  scanf("%f", &program_config->kp);
 
   printf("Ki: ");
-  scanf("%f", &program_config.ki);
+  scanf("%f", &program_config->ki);
 
   printf("Kd: ");
-  scanf("%f", &program_config.kd);
+  scanf("%f", &program_config->kd);
 
   clear();
   return show_menu(program_config);
 }
 
-int start_temperature_from_terminal(Config program_config){
+int start_temperature_from_terminal(Config *program_config){
   printf("Temperatura: ");
-  scanf("%f", &program_config.temp);
+  scanf("%f", &program_config->temp);
 
   clear();
   return show_menu(program_config);
 }
 
-int edit_execution_mode(Config program_config){
+int edit_execution_mode(Config *program_config){
   int choice;
 
   printf("Escolha o modo de execução:\n");
@@ -124,7 +124,7 @@ int edit_execution_mode(Config program_config){
     edit_execution_mode(program_config);
   }
 
-  program_config.mode = choice - 1;
+  program_config->mode = choice - 1;
 
   clear();
   return show_menu(program_config);

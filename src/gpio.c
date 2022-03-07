@@ -9,15 +9,15 @@ void initialize_gpio(){
 }
 
 
-void use_fan(int pwm){
+void use_fan(float pwm){
   if(pwm < FAN_MIN_VALUE)
     pwm = FAN_MIN_VALUE;
 
-  softPwmWrite(FAN_PIN, pwm);
+  softPwmWrite(FAN_PIN, (int) pwm);
 }
 
-void use_resistence(int pwm){
-  softPwmWrite(RESISTENCE_PIN, pwm);
+void use_resistence(float pwm){
+  softPwmWrite(RESISTENCE_PIN, (int) pwm);
 }
 
 void turn_off_fan(){
@@ -33,7 +33,7 @@ void turn_off_fan_and_resistence(){
   turn_off_resistence();
 }
 
-void controll_temperature(int pid_result){
+void controll_temperature(float pid_result){
   if(pid_result == 0){
     turn_off_fan_and_resistence();
 

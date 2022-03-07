@@ -46,11 +46,10 @@ void print_sensors_data_on_display(ControlMode mode, float ti, float te, float t
 }
 
 void print_system_off(){
-  ClrLcd();
   lcdLoc(LINE1);
   typeln("Sistema");
   lcdLoc(LINE2);
-  typeln("Desligado!!");
+  typeln("Desligado!");
 }
 
 // float to string
