@@ -38,6 +38,7 @@
 #include "sensor.h"
 #include "display.h"
 #include "store_data.h"
+#include "app.h"
 
 /******************************************************************************/
 /*!                               Structures                                  */
@@ -292,7 +293,7 @@ int8_t stream_sensor_data_forced_mode(struct bme280_dev *dev)
   return rslt;
 }
 
-void connect_with_sensor() {
+float get_external_temperature() {
   struct bme280_dev dev;
   struct identifier id;
 
@@ -328,12 +329,14 @@ void connect_with_sensor() {
     exit(1);
   }
 
-  rslt = stream_sensor_data_forced_mode(&dev);
-  if (rslt != BME280_OK)
-  {
-    fprintf(stderr, "Failed to stream sensor data (code %+d).\n", rslt);
-    exit(1);
-  }
+  // rslt = stream_sensor_data_forced_mode(&dev);
+  // if (rslt != BME280_OK)
+  // {
+  //   fprintf(stderr, "Failed to stream sensor data (code %+d).\n", rslt);
+  //   exit(1);
+  // }
+
+  return get_sensor_temp(&dev);
 }
 
 void show_data_on_display (struct bme280_data *comp_data) {
@@ -343,5 +346,60 @@ void show_data_on_display (struct bme280_data *comp_data) {
   press = 0.01 * comp_data->pressure;
   hum = comp_data->humidity;
 
-  print_sensors_data_on_display(temp, press, hum);
+  print_sensors_data_on_display(TERMINAL, temp, press, hum);
+}
+
+float get_sensor_temp(struct bme280_dev *dev){
+  /* Variable to define the result */
+  int8_t rslt = BME280_OK;
+
+  /* Variable to define the selecting sensors */
+  uint8_t settings_sel = 0;
+
+  /* Variable to store minimum wait time between consecutive measurement in force mode */
+  uint32_t req_delay;
+
+  /* Structure to get the pressure, temperature and humidity values */
+  struct bme280_data comp_data;
+
+  /* Recommended mode of operation: Indoor navigation */
+  dev->settings.osr_h = BME280_OVERSAMPLING_1X;
+  dev->settings.osr_p = BME280_OVERSAMPLING_16X;
+  dev->settings.osr_t = BME280_OVERSAMPLING_2X;
+  dev->settings.filter = BME280_FILTER_COEFF_16;
+
+  settings_sel = BME280_OSR_PRESS_SEL | BME280_OSR_TEMP_SEL | BME280_OSR_HUM_SEL | BME280_FILTER_SEL;
+
+  /* Set the sensor settings */
+  rslt = bme280_set_sensor_settings(settings_sel, dev);
+  if (rslt != BME280_OK)
+  {
+    fprintf(stderr, "Failed to set sensor settings (code %+d).", rslt);
+
+    return rslt;
+  }
+
+  /*Calculate the minimum delay required between consecutive measurement based upon the sensor enabled
+   *  and the oversampling configuration. */
+  req_delay = bme280_cal_meas_delay(&dev->settings);
+
+
+  /* Set the sensor to forced mode */
+  rslt = bme280_set_sensor_mode(BME280_FORCED_MODE, dev);
+  if (rslt != BME280_OK)
+  {
+    fprintf(stderr, "Failed to set sensor mode (code %+d).", rslt);
+    return -1;
+  }
+
+  /* Wait for the measurement to complete and print data */
+  dev->delay_us(req_delay, dev->intf_ptr);
+  rslt = bme280_get_sensor_data(BME280_ALL, &comp_data, dev);
+  if (rslt != BME280_OK)
+  {
+    fprintf(stderr, "Failed to get sensor data (code %+d).", rslt);
+    return -1;
+  }
+
+  return comp_data.temperature;
 }

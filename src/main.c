@@ -13,12 +13,6 @@
 
 struct sigaction old_action;
 
-void shut_down(){
-  close_csv_file();
-  print_system_off();
-  turn_off_system();
-}
-
 void sigint_handler(int sig_no) {
   printf("Exiting program\n");
   shut_down();
@@ -33,14 +27,10 @@ int main(){
   action.sa_handler = &sigint_handler;
   sigaction(SIGINT, &action, &old_action);
 
-  initialize_uart();
-  initialize_gpio();
-  // connect_with_sensor();
-
   Config program_config = initial_config();
 
   clear();
-  show_menu(program_config);
+  // show_menu(program_config);
 
   start_app(program_config);
   app_main_loop(program_config);

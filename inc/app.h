@@ -15,6 +15,12 @@
 #define MESSAGE_REQUEST_SIZE 0
 #define MESSAGE_SYSTEM_STATE_SIZE 1
 #define MESSAGE_SEND_SIGNAL_SIZE 4
+#define MESSAGE_RECEIVED_SIZE 5
+
+#define TURN_ON 0x01
+#define TURN_OFF 0x02
+#define ACTIVATE_POTENTIOMETER 0x03
+#define ACTIVATE_REFLOW_CURVE 0x04
 
 typedef enum OnOffState
 {
@@ -44,13 +50,15 @@ void app_main_loop(Config app_config);
 
 int option_error(int opt_expected, int opt_received);
 void start_app(Config app_config);
+void turn_off_system();
+void shut_down();
 
-void request_internal_temperature();
-void request_potentiometer_temperature();
-void request_user_commands();
+float request_internal_temperature();
+float request_potentiometer_temperature();
+void request_user_commands(Config app_config);
 void send_control_signal(int control_signal);
 void send_reference_signal(int reference_signal);
 void send_system_status(OnOffState state);
 void send_control_mode(ControlMode state);
-
+float get_reference_temperature(Config app_config);
 #endif

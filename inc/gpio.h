@@ -14,7 +14,7 @@ void use_fan(int pwm);
 void use_resistence(int pwm);
 void turn_off_fan();
 void turn_off_resistence();
-void turn_off_system();
+void turn_off_fan_and_resistence();
 void controll_temperature(int pid_result);
 
 #endif

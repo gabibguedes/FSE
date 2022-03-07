@@ -58,15 +58,6 @@ int get_modbus_code_from_option(int option){
   return code;
 }
 
-int option_error(int opt_expected, int opt_received) {
-  if (opt_expected == opt_received)
-    return 0;
-
-  show_error("Opção", opt_expected, opt_received);
-  return 1;
-}
-
-
 unsigned char *receive_modbus_message(int option) {
   unsigned char *buffer, *message;
   int buffer_size = RECEIVE_DATA_SIZE;

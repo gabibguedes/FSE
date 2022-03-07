@@ -21,13 +21,13 @@
 char* translate_control_mode_to_lcd(ControlMode mode){
   switch (mode) {
   case TERMINAL:
-    return "TERM"
+    return "TERM";
   case POTENTIOMETER:
-    return "POT"
+    return "POT";
   case REFLOW_CURVE:
-    return "REFLOW"
+    return "REFLOW";
   default:
-    return ""
+    return "";
   }
 }
 
@@ -50,7 +50,7 @@ void print_system_off(){
   lcdLoc(LINE1);
   typeln("Sistema");
   lcdLoc(LINE2);
-  typeln("Desligado!");
+  typeln("Desligado!!");
 }
 
 // float to string

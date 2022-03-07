@@ -68,7 +68,7 @@ int show_menu(Config program_config){
     break;
   case 4:
     clear();
-    edit_pid_constants(program_config);
+    edit_temperature(program_config);
     break;
 
   default:
@@ -78,13 +78,14 @@ int show_menu(Config program_config){
   return 1;
 }
 
-int edit_pid_constants(Config program_config){
+int edit_temperature(Config program_config){
   printf("Temperatura: ");
   scanf("%f", &program_config.temp);
 
   clear();
   return show_menu(program_config);
 }
+
 int edit_pid_constants(Config program_config){
   printf("Digite os novos valores das constantes PID:\n");
   printf("Kp: ");

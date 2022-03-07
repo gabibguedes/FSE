@@ -1,7 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#import "app.h"
+#include "app.h"
 
 // Define some device parameters
 #define I2C_ADDR 0x27 // I2C device address
@@ -32,6 +32,6 @@ void typeChar(char val);
 
 int fd; // seen by all subroutines
 
-void print_sensors_data_on_display(float temp, float pressure, float humidity);
-
+void print_sensors_data_on_display(ControlMode mode, float ti, float te, float tr);
+void print_system_off();
 #endif
