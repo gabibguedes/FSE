@@ -32,7 +32,6 @@ char* translate_control_mode_to_lcd(ControlMode mode){
 }
 
 void print_sensors_data_on_display(ControlMode mode, float ti, float te, float tr){
-  // ClrLcd();
   lcdLoc(LINE1);
   typeln(translate_control_mode_to_lcd(mode));
   typeln(" TI:");
@@ -46,6 +45,7 @@ void print_sensors_data_on_display(ControlMode mode, float ti, float te, float t
 }
 
 void print_system_off(){
+  ClrLcd();
   lcdLoc(LINE1);
   typeln("Sistema");
   lcdLoc(LINE2);

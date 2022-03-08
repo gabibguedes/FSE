@@ -4,5 +4,6 @@
 
 void open_csv();
 void write_measures(float ti, float te, float tr, float pid);
+void get_time();
 
 #endif
