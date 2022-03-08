@@ -27,3 +27,12 @@ O programa iniciará com um menu, onde será possível fazer os ajustes das gran
 
 Ao começar a executar a interação com o usuário passa a ser pelo dashboard.
 
+No display será possível ver as temperaturas medidas, sendo:
+- TI: Temperatura Interna
+- TE: Temperatura Externa
+- TR: Temperatura de Referência
+
+E o modo de execução selecionado, sendo:
+- POT: Potenciômetro
+- TERM: Terminal
+- REFLOW: Curva de Reflow
